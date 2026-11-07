@@ -10,6 +10,7 @@ describe('readNight', () => {
 
     expect(digest.night).toBe('2026-10-28');
     expect(digest.badLines).toBe(1);
+    expect(digest.counts).toEqual({ ok: 10, retry: 4, fail: 1 });
     expect(digest.rows.map((row) => row.job)).toEqual([
       'digest/render',
       'fixtures/refresh',
@@ -75,7 +76,12 @@ describe('readNight', () => {
     const dir = mkdtempSync(join(tmpdir(), 'rig-digest-'));
     writeFileSync(join(dir, '2026-01-01.jsonl'), '');
 
-    expect(readNight(dir, '2026-01-01')).toEqual({ night: '2026-01-01', rows: [], badLines: 0 });
+    expect(readNight(dir, '2026-01-01')).toEqual({
+      night: '2026-01-01',
+      rows: [],
+      badLines: 0,
+      counts: { ok: 0, retry: 0, fail: 0 },
+    });
   });
 
   it('counts one good line and one bad line', () => {

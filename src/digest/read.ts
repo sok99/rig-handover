@@ -42,7 +42,8 @@ function parseLine(raw: string): ParsedLine | null {
 
 export function readNight(runsDir: string, night: string): NightDigest {
   const text = readFileSync(`${runsDir}/${night}.jsonl`, 'utf8');
-  if (text === '') return { night, rows: [], badLines: 0 };
+  const counts = { ok: 0, retry: 0, fail: 0 };
+  if (text === '') return { night, rows: [], badLines: 0, counts };
 
   const lines = text.split('\n');
   if (lines[lines.length - 1] === '') lines.pop();
@@ -56,6 +57,7 @@ export function readNight(runsDir: string, night: string): NightDigest {
       badLines += 1;
       continue;
     }
+    counts[parsed.status] += 1;
     const group = byJob.get(parsed.job);
     if (group) group.push(parsed);
     else byJob.set(parsed.job, [parsed]);
@@ -83,5 +85,5 @@ export function readNight(runsDir: string, night: string): NightDigest {
   }
 
   rows.sort((a, b) => (a.job < b.job ? -1 : a.job > b.job ? 1 : 0));
-  return { night, rows, badLines };
+  return { night, rows, badLines, counts };
 }

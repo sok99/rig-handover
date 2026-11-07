@@ -6,6 +6,7 @@ export type Status = {
   adapter: string;
   installed: string;
   lastBeat: Beat | null;
+  runsDir: string;
   nights: string[];
 };
 
@@ -27,6 +28,7 @@ export function readStatus(config: RigConfig): Status {
     adapter: config.adapter,
     installed: config.installed,
     lastBeat: lastBeat(),
+    runsDir: config.runsDir,
     nights: nightsOnDisk(config.runsDir),
   };
 }
