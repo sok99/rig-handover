@@ -15,6 +15,7 @@ export type NightDigest = {
   night: string;
   rows: DigestRow[];
   badLines: number;
+  counts: { ok: number; retry: number; fail: number };
 };
 
 export type ReadNight = (runsDir: string, night: string) => NightDigest;
